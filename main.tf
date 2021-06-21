@@ -4,12 +4,18 @@ terraform {
 
 provider "google" {
   project = var.project
+  region  = var.region
+  zone    = var.zone
 }
 
-module "app-gke-cluster" {
-  source       = "./modules/app-gke-cluster"
-  name         = "${var.env}-${var.cluster_name}"
-  location     = var.location
-  node_count   = var.cluster_node_count
-  machine_type = var.cluster_machine_type
+module "coolapp-host-vpc" {
+  source            = "./modules/app-host-vpc"
+  project           = var.project
+  region            = var.region
+  name              = "${var.env}-coolapp-vpc"
+  app               = "coolapp"
+  description       = "Host VPC for coolapp"
+  primary_subnets   = var.vpc_primary_subnets
+  secondary_subnets = var.vpc_secondary_subnets
+  route_to_internet = true
 }
